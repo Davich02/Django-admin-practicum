@@ -69,6 +69,8 @@ class Task(UniqueID, TimeStampedModel):
     assignee = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='tasks', verbose_name='Assignees',
                                  on_delete=models.CASCADE)
     tags = models.ManyToManyField('Tag', related_name='tasks', verbose_name='Tags')
+    parent=models.ForeignKey('self', on_delete=models.CASCADE, blank=True, null=True, related_name='subtasks')
+
 
     def __str__(self):
         return f'Task: {self.name}'
@@ -109,3 +111,16 @@ class ProjectFile(UniqueID, TimeStampedModel):
         verbose_name = 'ProjectFile'
         verbose_name_plural = 'ProjectFiles'
         ordering = ('-created_at',)
+
+class SubTaskManager(models.Manager):
+    def get_queryset(self):
+        return super().get_queryset().filter(parent__isnull=False)
+
+
+class SubTask(Task):
+    objects = SubTaskManager()
+
+    class Meta:
+        proxy = True
+        verbose_name = 'SubTask'
+        verbose_name_plural = 'SubTasks'
