@@ -64,10 +64,14 @@ class Task(UniqueID, TimeStampedModel):
     description = models.TextField(verbose_name='Description')
     status = models.CharField(max_length=15, choices=Statuses, verbose_name='Status', default=Statuses.NEW)
     priority = models.CharField(max_length=15, choices=Priorities, verbose_name='Priority')
-    project = models.ForeignKey(Project, on_delete=models.CASCADE, related_name='tasks', verbose_name='Project')
+    #project = models.ForeignKey(Project, on_delete=models.CASCADE, related_name='tasks', verbose_name='Project')
+    project = models.ForeignKey(Project, null=True, blank=True, on_delete=models.CASCADE, related_name='tasks',verbose_name='Project')
     due_date = models.DateTimeField(blank=True, null=True)
-    assignee = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='tasks', verbose_name='Assignees',
-                                 on_delete=models.CASCADE)
+    #assignee = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='tasks', verbose_name='Assignees',
+                                 #on_delete=models.CASCADE)
+    assignee = models.ForeignKey(settings.AUTH_USER_MODEL, null=True, blank=True, related_name='tasks',
+                                 verbose_name='Assignees', on_delete=models.CASCADE)
+
     tags = models.ManyToManyField('Tag', related_name='tasks', verbose_name='Tags')
     parent=models.ForeignKey('self', on_delete=models.CASCADE, blank=True, null=True, related_name='subtasks')
 
