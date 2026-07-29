@@ -26,31 +26,18 @@ class TaskAdmin(admin.ModelAdmin):
     list_filter = ('project', 'status', 'priority', 'created_at', 'due_date', 'assignee')
     search_fields =('name',)
 
-    @admin.action(description="status closed")
-    def tasks_close(self, request, queryset):
-        for task in queryset:
-            task.status = Statuses.CLOSED
-            task.save()
-        return queryset
+    @admin.action(description='Replace specific status to Done')
+    def replace_status_to_done(self, request, tasks):
+        tasks.update(status=Statuses.DONE)
 
+    actions = [replace_status_to_done]
 
-    @admin.action(description="priority low")
-    def task_low(self, request, queryset):
-        for task in queryset:
-            task.priority = Priorities.LOW
-            task.save()
-        return queryset
-
-    @admin.action(description="priority low")
-    def task_low(self, request, queryset):
-        for task in queryset:
-            task.priority = Priorities.LOW
-            task.save()
-        return queryset
-
-
-    actions = ['task_low', "tasks_close"]
-
+    priorities = [(priority.name, priority.value, priority.label) for priority in Priorities]
+    for key, value, label in priorities:
+        change_priority = lambda self, request, tasks, p=value: tasks.update(priority=p)
+        change_priority.__name__ = key
+        change_priority.short_description = f'Change specific priority to {label}'
+        actions.append(change_priority)
 
 
 @admin.register(Tag)
