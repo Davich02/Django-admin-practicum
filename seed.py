@@ -10,9 +10,11 @@ django.setup()
 
 from apps.new_app.models import ProjectFile, Project, Tag, Task, Statuses, Priorities
 from django.utils import timezone
-from django.db.models import Q, F, Count
+from django.db.models import Q, F, Count, Avg
 import calendar
-
+from django.db.models.functions import ExtractWeekDay
+from django.contrib.auth.models import User
+from django.core.paginator import Paginator, Page
 
 now = timezone.now()
 _, last_day = calendar.monthrange(now.year, now.month)
@@ -135,3 +137,68 @@ def calculate_end_of_month():
 #     last_month = timezone.now() - relativedelta(month=1)
 #     Task.objects.filter(project__name="TIGER", created_at__lte=last_month).update(priority=Priorities.URGENT)
 # task26()
+
+"""ПРАКТИКА 4"""
+
+# def task1():
+#     cur_month = Project.objects.filter(created_at__month=timezone.now().month)
+#     for project in cur_month:
+#         print(project.name, project.created_at)
+# task1()
+
+# def task2():
+#     monday = ProjectFile.objects.annotate(weekday=ExtractWeekDay('created_at')).filter(weekday=5)
+#     if monday:
+#         for project in monday:
+#             print(project.name)
+#     else:
+#         print("Empty Data")
+#
+# task2()
+
+# def task3():
+#     task = Project.objects.all().count()
+#     print(task)
+# task3()
+
+# def task4():
+#     projects = Project.objects.annotate(count=Count('files')).values('id', 'name', 'count')
+#
+#     for project in projects:
+#         print(project['id'],project['name'],project['count'])
+# task4()
+
+# def task5():
+#     projects = Project.objects.annotate(s_count=Count('tasks')).aggregate(avg_count=Avg('s_count'))
+#     print(projects)
+# task5()
+
+# def task6():
+#     projects = User.objects.annotate(count=Count('tasks')).values('count','username')
+#     for project in projects:
+#         print(project['username'], project['count'])
+# task6()
+#
+# def task7():
+#     projects = Task.objects.order_by('priority','due_date').values('name','priority','due_date')
+#     for project in projects:
+#         print(project['name'],project['priority'], project['due_date'])
+# task7()
+
+# def task8():
+#     projects = (User.objects.annotate(count=Count('tasks')).order_by('-count')
+#                 .values('count', 'username'))
+#     for project in projects:
+#          print(project['username'], project['count'])
+# task8()
+
+def task9():
+    tasks = Task.objects.all()
+    page = 2
+    number_of_items = 5
+    for task in tasks[(page-1)*number_of_items:page*number_of_items]:
+        print(task)
+task9()
+
+
+
