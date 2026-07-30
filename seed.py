@@ -1,6 +1,8 @@
 import os
 from datetime import datetime, timedelta
 from dateutil.relativedelta import relativedelta
+from django.db.models.aggregates import Avg
+from django.db.models.functions import ExtractWeekDay
 
 import django
 from django.core.management import BaseCommand
@@ -12,7 +14,8 @@ from apps.new_app.models import ProjectFile, Project, Tag, Task, Statuses, Prior
 from django.utils import timezone
 from django.db.models import Q, F, Count
 import calendar
-
+from django.contrib.auth.models import User
+from django.core.paginator import Paginator
 
 now = timezone.now()
 _, last_day = calendar.monthrange(now.year, now.month)
@@ -135,3 +138,68 @@ def calculate_end_of_month():
 #     last_month = timezone.now() - relativedelta(month=1)
 #     Task.objects.filter(project__name="TIGER", created_at__lte=last_month).update(priority=Priorities.URGENT)
 # task26()
+
+'''-------------Practic 30.07 -------------'''
+
+
+# def task1():
+#     cur_mont_projects = Project.objects.filter(created_at__month=timezone.now().month)
+#     if cur_mont_projects:
+#         for project in cur_mont_projects:
+#             print(project.name, project.created_at)
+#
+#     else:
+#         print("No projects in this month")
+# task1()
+#
+# def task2():
+#     monday = Project.objects.annotate(weekday=ExtractWeekDay('created_at')).filter(weekday=5)
+#     if monday:
+#         for project in monday:
+#             print(project.name, project.created_at)
+#     else:
+#         print("No projects on Monday")
+# task2()
+#
+# def task3():
+#     task = Project.objects.all().count()
+#     print(task)
+# task3()
+
+# def task4():
+#     every_project = Project.objects.values('name','id').annotate(count=Count('files'))
+#     for project in every_project:
+#         print(project['name'], project['count'],project['id'])
+#
+# task4()
+#
+# def task5():
+#     midle_task = Project.objects.annotate(task_count=Count('tasks')).aggregate(avg_count=Avg('s_count'))
+#     print(midle_task)
+# task5()
+
+# def task6():
+#     task_for_every_user = User.objects.annotate(task_count=Count('tasks'))
+#     for user in task_for_every_user:
+#         print(user.username,user.task_count)
+# task6()
+
+# def task7():
+#     sort_task = Task.objects.order_by('priority','due_date')
+#     for task in sort_task:
+#         print(task.name, task.priority, task.due_date)
+# task7()
+
+# def task8():
+#     project = User.objects.annotate(task_count=Count('tasks')).order_by('-task_count')
+#     for user in project:
+#         print(user.username,user.task_count)
+# task8()
+
+def task9():
+    tasks = Task.objects.all()
+    page = 2
+    number_of_items = 10
+    for task in tasks[(page-1)*number_of_items:page*number_of_items]:
+        print(task)
+task9()
