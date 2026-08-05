@@ -17,6 +17,8 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from apps.new_app import views as task_views
+from apps.new_app.models import SubTask
+from apps.new_app.views import SubTaskListCreateView, SubTaskDetailUpdateDeleteView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -24,6 +26,10 @@ urlpatterns = [
     path('api/tasks/list/',task_views.task_list, name='task_list'),
     path('api/tasks/<uuid:pk>/', task_views.task_detail, name='task_detail'),
     path('api/tasks/count/',task_views.task_count, name='task_count'),
+    path('api/projects/get_all_projects/',task_views.get_all_projects, name='get_all_projects'),
+    path('api/projects/get_project_by_id/<uuid:pk>/',task_views.get_project_by_id, name='get_project_by_id'),
+    path('api/subtasks/', task_views.SubTaskListCreateView.as_view(), name='subtask-list-create'),
+    path('api/subtasks/<uuid:pk>/', task_views.SubTaskDetailUpdateDeleteView.as_view(), name='subtask-detail'),
 
 
 ]

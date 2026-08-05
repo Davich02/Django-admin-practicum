@@ -57,6 +57,16 @@ class Project(UniqueID, TimeStampedModel):
     def count_files(self):
         return self.files.count()
 
+class Category(models.Model):
+    name = models.CharField(max_length=50, unique=True, verbose_name=_('Name'))
+
+    class Meta:
+        verbose_name = _('Category')
+        verbose_name_plural = _('Categories')
+
+    def __str__(self):
+        return self.name
+
 
 class Task(UniqueID, TimeStampedModel):
     name = models.CharField(max_length=100, unique=True, verbose_name="Project's name",
@@ -74,6 +84,8 @@ class Task(UniqueID, TimeStampedModel):
 
     tags = models.ManyToManyField('Tag', related_name='tasks', verbose_name='Tags')
     parent=models.ForeignKey('self', on_delete=models.CASCADE, blank=True, null=True, related_name='subtasks')
+    category = models.ForeignKey(Category, null=True, blank=True, on_delete=models.SET_NULL, related_name='tasks',
+                                 verbose_name='Category')
 
 
     def __str__(self):
