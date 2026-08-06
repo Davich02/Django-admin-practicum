@@ -14,12 +14,18 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
-from turtle import home
-
 from django.contrib import admin
 from django.urls import path, include
+from . import views as project_
+from apps.new_app.views.tag_views import TagList, TagDetail
+from apps.new_app.views.project_views import  ProjectList, ProjectDetail
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('new_app/', include('apps.new_app.urls')),
+    # path('projects/', project_.get_all_projects),
+    path('tags/', TagList.as_view()),
+    path('tags/<uuid:id>/', TagDetail.as_view()),
+    path('projects/', ProjectList.as_view()),
+    path('projects/<str:name>/', ProjectDetail.as_view()),
+
+
 ]

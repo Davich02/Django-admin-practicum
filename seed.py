@@ -192,13 +192,13 @@ def calculate_end_of_month():
 #          print(project['username'], project['count'])
 # task8()
 
-def task9():
-    tasks = Task.objects.all()
-    page = 2
-    number_of_items = 5
-    for task in tasks[(page-1)*number_of_items:page*number_of_items]:
-        print(task)
-task9()
+# def task9():
+#     tasks = Task.objects.all()
+#     page = 2
+#     number_of_items = 5
+#     for task in tasks[(page-1)*number_of_items:page*number_of_items]:
+#         print(task)
+# task9()
 
 
 
