@@ -36,10 +36,8 @@ from rest_framework.generics import get_object_or_404
 #         return Response(serializer.data,status=status.HTTP_201_CREATED)
 
 class ProjectFileList(APIView):
-
     def get(self, request):
         project_files = ProjectFile.objects.prefetch_related('projects').all()
-
         if name := request.query_params.get('name'):
             project_files = project_files.filter(name=name)
         serializer = AllProjectFileSerializer(project_files, many=True)

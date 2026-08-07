@@ -17,7 +17,6 @@ class CreateProjectFileSerializer(ModelSerializer):
     class Meta:
         model = ProjectFile
         fields = ('name','file','projects')
-
     def validate_name(self,value):
         if not value.isascii():
             raise serializers.ValidationError("Project file name must contain only ASCII characters")

@@ -28,6 +28,7 @@ urlpatterns = [
     path('projects/', ProjectList.as_view()),
     path('projects/<str:name>/', ProjectDetail.as_view()),
     path('files/', ProjectFileList.as_view()),
+
     # path('files/<str:name>', ProjectDetailsList.as_view()),
 
 
