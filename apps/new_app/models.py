@@ -2,9 +2,9 @@ from django.contrib.auth.models import User
 from django.db import models
 import uuid
 from django.utils.translation import gettext_lazy as _
-from django.core.validators import MinLengthValidator
+from django.core.validators import MinLengthValidator , FileExtensionValidator
 from django.conf import settings
-
+from apps.new_app.utils.upload_file_helpers import is_valid_size
 
 class Statuses(models.TextChoices):
     NEW = 'new', _('New')
@@ -97,9 +97,11 @@ class Tag(UniqueID, TimeStampedModel):
 
 
 
-class ProjectFile(UniqueID, TimeStampedModel):
+class ProjectFile(UniqueID, TimeStampedModel,):
     name = models.CharField(max_length=120, verbose_name='File name')
-    file = models.FileField(upload_to='projects/')
+    file = models.FileField(upload_to='documents/',
+                            validators=[FileExtensionValidator(allowed_extensions=['.pdf','.csv','.doc','.xlsx','.py'],
+                                                               )])
 
     def __str__(self):
         return f'ProjectFile: name {self.name}, path {self.file}'

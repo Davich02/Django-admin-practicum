@@ -19,6 +19,7 @@ from django.urls import path, include
 from . import views as project_
 from apps.new_app.views.tag_views import TagList, TagDetail
 from apps.new_app.views.project_views import  ProjectList, ProjectDetail
+from apps.new_app.views.projectfile_views import ProjectFileList ,ProjectFileDetail
 
 urlpatterns = [
     # path('projects/', project_.get_all_projects),
@@ -26,6 +27,9 @@ urlpatterns = [
     path('tags/<uuid:id>/', TagDetail.as_view()),
     path('projects/', ProjectList.as_view()),
     path('projects/<str:name>/', ProjectDetail.as_view()),
+    path('files/', ProjectFileList.as_view()),
+    path('files/<str:name>', ProjectFileDetail.as_view()),
+
 
 
 ]
