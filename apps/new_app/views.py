@@ -8,8 +8,9 @@ from django.db.models import Count
 from django.http import JsonResponse
 from rest_framework.views import APIView
 
-from apps.new_app.models import Task, Statuses, Project
+from apps.new_app.models import Task, Statuses, Project,Tag
 from apps.new_app.serializers.task import TaskSerializer,SubTaskCreateSerializer,SubTaskSerializer
+from apps.new_app.serializers.tag import TagSerializer
 from apps.new_app.serializers.project import ProjectSerializer
 #task1
 @api_view(['POST'])
@@ -21,11 +22,69 @@ def create_task(request):
     return Response(serializer.errors, status=400)
 
 #task2
+# @api_view(['GET'])
+# def task_list(request):
+#     stats = Task.objects.all()
+#     serializer = TaskSerializer(stats, many=True)
+#     return Response(serializer.data)
+
+DAYS = {
+    'monday': 2,
+    'tuesday': 3,
+    'wednesday': 4,
+    'thursday': 5,
+    'friday': 6,
+    'saturday': 7,
+    'sunday': 1,
+}
+
 @api_view(['GET'])
 def task_list(request):
-    stats = Task.objects.all()
-    serializer = TaskSerializer(stats, many=True)
+    day = request.query_params.get('day')
+    tasks = Task.objects.all()
+
+    if day:
+        day = day.lower()
+        week_day = DAYS.get(day)
+        if week_day:
+            tasks = tasks.filter(due_date__week_day=week_day)
+        else:
+            return Response({'error': 'Invalid day'}, status=400)
+
+    tasks = tasks.order_by('-created_at')
+
+    page = int(request.query_params.get('page', 1))
+    page_size = 5
+
+    start_index = (page - 1) * page_size
+    end_index = start_index + page_size
+    tasks = tasks[start_index:end_index]
+
+    serializer = TaskSerializer(tasks, many=True)
     return Response(serializer.data)
+
+
+@api_view(['GET'])
+def subtask_list(request):
+    parent_name = request.query_params.get('parent_name')
+    status_name = request.query_params.get('status')
+    subtasks = Task.objects.filter(parent__isnull=False)
+
+    if parent_name is not None:
+        subtasks = subtasks.filter(parent__name=parent_name)
+    if status_name is not None:
+        subtasks = subtasks.filter(status=status_name)
+
+    subtasks = subtasks.order_by('-created_at')
+
+    page = int(request.query_params.get('page', 1))
+    page_size = 5
+    start_index = (page - 1) * page_size
+    end_index = start_index + page_size
+    subtasks = subtasks[start_index:end_index]
+    serializer = TaskSerializer(subtasks, many=True)
+    return Response(serializer.data)
+
 
 #task3
 @api_view(['GET'])
@@ -101,4 +160,8 @@ class SubTaskDetailUpdateDeleteView(APIView):
         return Response(status=204)
 
 
-
+class TagListView(APIView):
+    def get(self, request):
+        tags = Tag.objects.all()
+        serializer = TagSerializer(tags, many=True)
+        return Response(serializer.data)

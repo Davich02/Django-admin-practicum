@@ -30,6 +30,7 @@ urlpatterns = [
     path('api/projects/get_project_by_id/<uuid:pk>/',task_views.get_project_by_id, name='get_project_by_id'),
     path('api/subtasks/', task_views.SubTaskListCreateView.as_view(), name='subtask-list-create'),
     path('api/subtasks/<uuid:pk>/', task_views.SubTaskDetailUpdateDeleteView.as_view(), name='subtask-detail'),
+    path('api/tasks/subtasks/', task_views.subtask_list, name='subtask_list'),
 
 
 ]
