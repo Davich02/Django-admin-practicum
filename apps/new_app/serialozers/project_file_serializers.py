@@ -10,7 +10,7 @@ from apps.new_app.utils.upload_file_helpers import is_valid_size
 class AllProjectFileSerializer(ModelSerializer):
     class Meta:
         model = ProjectFile
-        fields = ('id','name','file','projects')
+        fields = ('id','name','file','created_at','projects')
 
 class CreateProjectFileSerializer(ModelSerializer):
     file = serializers.FileField(validators=[is_valid_size])
@@ -21,3 +21,4 @@ class CreateProjectFileSerializer(ModelSerializer):
         if not value.isascii():
             raise serializers.ValidationError("Project file name must contain only ASCII characters")
         return value
+

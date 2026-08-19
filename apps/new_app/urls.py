@@ -19,7 +19,8 @@ from django.urls import path, include
 from . import views as project_
 from apps.new_app.views.tag_views import TagList, TagDetail
 from apps.new_app.views.project_views import  ProjectList, ProjectDetail
-from apps.new_app.views.projectfile_views import ProjectFileList #,ProjectFileDetail
+from apps.new_app.views.projectfile_views import ProjectFileListCreateAPIView,ProjectFileDetailAPIView
+from apps.new_app.views.task_views import AllTasksView, RetrieveUpdateDestroyTaskView
 
 urlpatterns = [
     # path('projects/', project_.get_all_projects),
@@ -27,7 +28,11 @@ urlpatterns = [
     path('tags/<uuid:id>/', TagDetail.as_view()),
     path('projects/', ProjectList.as_view()),
     path('projects/<str:name>/', ProjectDetail.as_view()),
-    path('files/', ProjectFileList.as_view()),
+    path('files/', ProjectFileListCreateAPIView.as_view()),
+    path('files/<uuid:pk>/', ProjectFileDetailAPIView.as_view()),
+    path('tasks/', AllTasksView.as_view()),
+    path('tasks/<uuid:pk>/', RetrieveUpdateDestroyTaskView.as_view()),
+
 
     # path('files/<str:name>', ProjectDetailsList.as_view()),
 
