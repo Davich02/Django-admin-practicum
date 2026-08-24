@@ -11,10 +11,21 @@ from apps.new_app.views_api.tasks_generic import TaskListCreateView, TaskDetailU
 from apps.new_app.views_api.subtask_generic import SubTaskListCreateView, SubTaskDetailUpdateDeleteView
 from apps.new_app.views_api.projects_generic import ProjectListCreateView, ProjectDetailUpdateDeleteView
 from apps.new_app.views_api.tags_generic import TagListCreateView, TagDetailUpdateDeleteView
+from apps.new_app.views_api.category import CategoryViewSet
+from rest_framework import routers
+from rest_framework.routers import DefaultRouter
+from django.urls import path, include
 
+
+
+router = DefaultRouter()
+router.register('categories', CategoryViewSet)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+
+    # ModelViewSet router
+    path('', include(router.urls)),
 
     # --- Task Generic Views
     path('api/tasks/', TaskListCreateView.as_view(), name='task_list_create'),

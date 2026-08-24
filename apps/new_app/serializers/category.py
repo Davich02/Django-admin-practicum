@@ -4,8 +4,7 @@ from apps.new_app.models import Category
 class CategoryCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Category
-        fields = (
-            'name',)
+        fields = ['id','name']
 
     def create(self, validated_data):
         if Category.objects.filter(name=validated_data['name']).exists():

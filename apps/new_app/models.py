@@ -4,6 +4,7 @@ import uuid
 from django.utils.translation import gettext_lazy as _
 from django.core.validators import MinLengthValidator
 from django.conf import settings
+from apps.new_app.managers import CategorySoftDeleteManager
 
 
 class Statuses(models.TextChoices):
@@ -59,6 +60,8 @@ class Project(UniqueID, TimeStampedModel):
 
 class Category(models.Model):
     name = models.CharField(max_length=50, unique=True, verbose_name=_('Name'))
+    is_deleted = models.BooleanField(default=False)
+    deleted_at = models.DateTimeField(blank=True, null=True)
 
     class Meta:
         verbose_name = _('Category')
@@ -66,6 +69,8 @@ class Category(models.Model):
 
     def __str__(self):
         return self.name
+
+    objects = CategorySoftDeleteManager()
 
 
 class Task(UniqueID, TimeStampedModel):
