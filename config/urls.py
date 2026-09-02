@@ -15,6 +15,7 @@ from apps.new_app.views_api.category import CategoryViewSet
 from rest_framework import routers
 from rest_framework.routers import DefaultRouter
 from django.urls import path, include
+from rest_framework_simplejwt.views import TokenObtainPairView,TokenRefreshView
 
 
 
@@ -42,6 +43,9 @@ urlpatterns = [
     # --- Tag Generic Views
     path('api/tags/', TagListCreateView.as_view(), name='tag_list_create'),
     path('api/tags/<uuid:pk>/', TagDetailUpdateDeleteView.as_view(), name='tag_detail'),
+# JWT
+    path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
 ]
 
 # old_urlpatterns = [
